@@ -47,7 +47,7 @@
         </javaTypeResolver>
 
         <!-- java 模型对象生成路径 -->
-        <javaModelGenerator targetPackage="com.moments.auth.model"
+        <javaModelGenerator targetPackage="com.moments.auth.model.PO"
                             targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
@@ -65,7 +65,8 @@
         <!--  XML生成路径  -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.moments.auth.dao" targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
             <property name="enableSubPackages" value="true" />
-            <property name="rootInterface" value="com.moments.auth.dao" />
+<!--            该属性会导致mapper接口继承dao接口-->
+<!--            <property name="rootInterface" value="com.moments.auth.dao" />-->
         </javaClientGenerator>
 
         <table tableName="user" domainObjectName="User" enableCountByExample="true"

@@ -1,4 +1,4 @@
-package com.moments.auth.model;
+package com.moments.auth.model.example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public class UserExample {
     protected List<Criteria> oredCriteria;
 
     public UserExample() {
-        oredCriteria = new ArrayList<Criteria>();
+        oredCriteria = new ArrayList<>();
     }
 
     public void setOrderByClause(String orderByClause) {
@@ -68,7 +68,7 @@ public class UserExample {
 
         protected GeneratedCriteria() {
             super();
-            criteria = new ArrayList<Criterion>();
+            criteria = new ArrayList<>();
         }
 
         public boolean isValid() {
@@ -376,7 +376,6 @@ public class UserExample {
     }
 
     public static class Criteria extends GeneratedCriteria {
-
         protected Criteria() {
             super();
         }

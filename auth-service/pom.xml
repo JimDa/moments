@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
-        <mbg.version>1.3.7</mbg.version>
+        <mbg.version>1.4.0</mbg.version>
         <targetJavaProject>${basedir}/src/main/java</targetJavaProject>
         <targetMapperPackage>com.moments.auth.dao</targetMapperPackage>
         <targetModelPackage>com.moments.auth.model.PO</targetModelPackage>

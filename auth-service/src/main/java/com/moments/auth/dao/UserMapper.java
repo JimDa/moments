@@ -1,11 +1,8 @@
 package com.moments.auth.dao;
 
-
-import com.moments.auth.model.User;
-import com.moments.auth.model.UserExample;
-
+import com.moments.auth.model.PO.User;
+import com.moments.auth.model.example.UserExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
