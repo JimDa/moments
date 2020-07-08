@@ -1,4 +1,4 @@
-package com.moments.auth.dao;
+package com.moments.auth.mapper;
 
 import com.moments.auth.model.PO.User;
 import com.moments.auth.model.example.UserExample;
