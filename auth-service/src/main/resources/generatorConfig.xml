@@ -63,7 +63,7 @@
 
         <!--  接口生成路径  -->
         <!--  XML生成路径  -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.moments.auth.dao" targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.moments.auth.mapper" targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
             <property name="enableSubPackages" value="true" />
 <!--            该属性会导致mapper接口继承dao接口-->
 <!--            <property name="rootInterface" value="com.moments.auth.dao" />-->

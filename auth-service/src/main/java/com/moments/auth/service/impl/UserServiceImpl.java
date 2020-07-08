@@ -1,7 +1,8 @@
 package com.moments.auth.service.impl;
 
-import com.moments.auth.dao.UserMapper;
-import com.moments.auth.model.User;
+
+import com.moments.auth.mapper.UserMapper;
+import com.moments.auth.model.PO.User;
 import com.moments.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

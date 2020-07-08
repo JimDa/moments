@@ -1,5 +1,6 @@
 package com.moments.auth.endpoint;
 
+import com.moments.auth.model.PO.User;
 import com.moments.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
