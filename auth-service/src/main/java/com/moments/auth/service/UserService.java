@@ -1,6 +1,6 @@
 package com.moments.auth.service;
 
-import com.moments.auth.model.PO.User;
+import com.moments.auth.model.User;
 
 import java.util.List;
 
