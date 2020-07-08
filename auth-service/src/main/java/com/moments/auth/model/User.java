@@ -1,6 +1,8 @@
-package com.moments.auth.model.PO;
+package com.moments.auth.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private Integer id;
 
     private String name;
@@ -8,6 +10,8 @@ public class User {
     private String password;
 
     private String email;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -22,7 +26,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
     public String getPassword() {
@@ -30,7 +34,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password == null ? null : password.trim();
     }
 
     public String getEmail() {
@@ -38,6 +42,6 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email == null ? null : email.trim();
     }
 }
