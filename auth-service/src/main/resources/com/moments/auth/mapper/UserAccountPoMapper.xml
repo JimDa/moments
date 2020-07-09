@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moments.auth.mapper.UserAccountPoMapper">
+  <resultMap id="BaseResultMap" type="com.moments.auth.model.PO.UserAccountPo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="birth_date" jdbcType="TIMESTAMP" property="birthDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="editor" jdbcType="VARCHAR" property="editor" />
+    <result column="edit_date" jdbcType="TIMESTAMP" property="editDate" />
+    <result column="wechat_openid" jdbcType="VARCHAR" property="wechatOpenid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, username, email, phone_num, `password`, gender, birth_date, create_date, creator, 
+    editor, edit_date, wechat_openid
+  </sql>
+  <select id="selectByExample" parameterType="com.moments.auth.model.example.UserAccountPoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from auth_user_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from auth_user_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from auth_user_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.moments.auth.model.example.UserAccountPoExample">
+    delete from auth_user_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.moments.auth.model.PO.UserAccountPo">
+    insert into auth_user_account (id, username, email, 
+      phone_num, `password`, gender, 
+      birth_date, create_date, creator, 
+      editor, edit_date, wechat_openid
+      )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phoneNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
+      #{birthDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{editor,jdbcType=VARCHAR}, #{editDate,jdbcType=TIMESTAMP}, #{wechatOpenid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.moments.auth.model.PO.UserAccountPo" useGeneratedKeys="true" keyProperty="id">
+    insert into auth_user_account
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phoneNum != null">
+        phone_num,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="birthDate != null">
+        birth_date,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="editor != null">
+        editor,
+      </if>
+      <if test="editDate != null">
+        edit_date,
+      </if>
+      <if test="wechatOpenid != null">
+        wechat_openid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="birthDate != null">
+        #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="editor != null">
+        #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="editDate != null">
+        #{editDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wechatOpenid != null">
+        #{wechatOpenid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.moments.auth.model.example.UserAccountPoExample" resultType="java.lang.Long">
+    select count(*) from auth_user_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update auth_user_account
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null">
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null">
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNum != null">
+        phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        `password` = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gender != null">
+        gender = #{record.gender,jdbcType=CHAR},
+      </if>
+      <if test="record.birthDate != null">
+        birth_date = #{record.birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createDate != null">
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.editor != null">
+        editor = #{record.editor,jdbcType=VARCHAR},
+      </if>
+      <if test="record.editDate != null">
+        edit_date = #{record.editDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.wechatOpenid != null">
+        wechat_openid = #{record.wechatOpenid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update auth_user_account
+    set id = #{record.id,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      phone_num = #{record.phoneNum,jdbcType=VARCHAR},
+      `password` = #{record.password,jdbcType=VARCHAR},
+      gender = #{record.gender,jdbcType=CHAR},
+      birth_date = #{record.birthDate,jdbcType=TIMESTAMP},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      editor = #{record.editor,jdbcType=VARCHAR},
+      edit_date = #{record.editDate,jdbcType=TIMESTAMP},
+      wechat_openid = #{record.wechatOpenid,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.moments.auth.model.PO.UserAccountPo">
+    update auth_user_account
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="birthDate != null">
+        birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="editor != null">
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="editDate != null">
+        edit_date = #{editDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="wechatOpenid != null">
+        wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.moments.auth.model.PO.UserAccountPo">
+    update auth_user_account
+    set username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone_num = #{phoneNum,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=CHAR},
+      birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      editor = #{editor,jdbcType=VARCHAR},
+      edit_date = #{editDate,jdbcType=TIMESTAMP},
+      wechat_openid = #{wechatOpenid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

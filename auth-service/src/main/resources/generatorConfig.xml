@@ -48,7 +48,7 @@
 
         <!-- java 模型对象生成路径 -->
         <javaModelGenerator targetPackage="com.moments.auth.model.PO"
-                            targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
+                            targetProject="${targetJavaProject}">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
             <property name="useActualColumnNames" value="true" />
@@ -57,19 +57,32 @@
 
         <!-- java mapper生成路径 -->
         <sqlMapGenerator targetPackage="com.moments.auth.mapper"
-                         targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
+                         targetProject="${targetJavaProject}">
 <!--            <property name="enableSubPackages" value="true" />-->
         </sqlMapGenerator>
 
         <!--  接口生成路径  -->
         <!--  XML生成路径  -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.moments.auth.mapper" targetProject="/Users/dapengchengsmac/IdeaProjects/moments/auth-service/src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.moments.auth.mapper" targetProject="${targetJavaProject}">
             <property name="enableSubPackages" value="true" />
 <!--            该属性会导致mapper接口继承dao接口-->
 <!--            <property name="rootInterface" value="com.moments.auth.dao" />-->
         </javaClientGenerator>
 
         <table tableName="user" domainObjectName="User" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"/>
+
+        <table tableName="auth_user_account" domainObjectName="UserAccountPo" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"/>
+        <table tableName="auth_user_role" domainObjectName="UserRolePo" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"/>
+        <table tableName="auth_user_role_rel" domainObjectName="UserRoleRelPo" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"/>
+        <table tableName="auth_third_party_access" domainObjectName="ThirdPartyAccessPo" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true"/>
     </context>
