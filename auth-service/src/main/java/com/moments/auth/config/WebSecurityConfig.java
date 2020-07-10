@@ -8,6 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -21,6 +23,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
 
 import javax.servlet.Filter;
@@ -29,6 +32,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailService customUserDetailService;
@@ -54,31 +58,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // @formatter:off
         httpSecurity
-                .formLogin()
-                .loginPage("/login")
-                .and()
-                .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/oauth/**")
-                .permitAll()
-                .anyRequest()
+                .antMatchers("/oauth/**")
                 .authenticated()
                 .and()
                 .csrf()
+                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
                 .disable()
-                .cors()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
+                .formLogin()
                 .permitAll()
                 .and()
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                .logout()
+                .permitAll()
+                .and();
         // @formatter:on
     }
 

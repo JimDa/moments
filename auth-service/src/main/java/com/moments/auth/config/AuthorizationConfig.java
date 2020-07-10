@@ -13,16 +13,22 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
+import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.*;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableOAuth2Client
@@ -40,10 +46,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         authorizationServerSecurityConfigurer.tokenKeyAccess("isAuthenticated()");
     }
 
-    @Override
-    public void configure(ClientDetailsServiceConfigurer clientDetailsServiceConfigurer) throws Exception {
-        clientDetailsServiceConfigurer.jdbc(dataSource);
-    }
+//    @Override
+//    public void configure(ClientDetailsServiceConfigurer clientDetailsServiceConfigurer) throws Exception {
+//        clientDetailsServiceConfigurer.jdbc(dataSource);
+//    }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer authorizationServerEndpointsConfigurer) throws Exception {
@@ -90,6 +96,30 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Bean
     public TokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
         return new RedisTokenStore(redisConnectionFactory);
+    }
+
+    @Bean
+    public TokenGranter tokenGranter() {
+
+        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
+
+        AuthorizationCodeServices codeServices = authorizationCodeServices();
+
+        AuthorizationServerTokenServices tokenServices = defaultTokenServices();
+        List<TokenGranter> tokenGranters = Arrays.asList(
+                new AuthorizationCodeTokenGranter(tokenServices, codeServices, clientDetailsService(), requestFactory));
+
+        return new CompositeTokenGranter(tokenGranters);
+    }
+
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new InMemoryAuthorizationCodeServices();
+    }
+
+    @Bean
+    public ClientDetailsService clientDetailsService() {
+        return new JdbcClientDetailsService(dataSource);
     }
 
 

@@ -15,8 +15,8 @@ spring:
   datasource:
     auth-service:
       jdbc-url: jdbc:mysql://localhost:3306/moments?useUnicode=true&characterEncoding=UTF-8&useSSL=FALSE&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-      username: dpc
-      password: dpc123
+      username: root
+      password: root
 
 facebook:
   client:
