@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class UserAuthTemplate implements UserDetails {
+    private Integer id;
     private List<GrantedAuthority> authorities;
     private String username;
     private String password;
@@ -15,6 +16,14 @@ public class UserAuthTemplate implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new CustomGrantedAuthority("ROLE_USER"));
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

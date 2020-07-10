@@ -1,5 +1,7 @@
 package com.moments.auth.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,12 +9,16 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.net.UnknownHostException;
 
 @Configuration
 public class RedisConfig {
+    @Autowired
+    @Qualifier("jacksonSerializer")
+    private Jackson2JsonRedisSerializer jackson2JsonRedisSerializer;
 
     @Bean
     @ConditionalOnMissingBean(name = "redisTemplate")
@@ -23,7 +29,7 @@ public class RedisConfig {
         template.setConnectionFactory(redisConnectionFactory);
 
         // 设置value的序列化规则和 key的序列化规则
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setKeySerializer(new StringRedisSerializer());
         template.afterPropertiesSet();
 
@@ -39,7 +45,7 @@ public class RedisConfig {
         template.setConnectionFactory(redisConnectionFactory);
 
         // 设置value的序列化规则和 key的序列化规则
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setKeySerializer(new StringRedisSerializer());
         template.afterPropertiesSet();
 

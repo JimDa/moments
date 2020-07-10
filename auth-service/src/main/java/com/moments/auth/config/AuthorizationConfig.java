@@ -1,118 +1,96 @@
 package com.moments.auth.config;
 
+import com.moments.auth.security.CustomTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.filter.CompositeFilter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
-import javax.servlet.Filter;
-import java.util.ArrayList;
-import java.util.List;
+import javax.sql.DataSource;
+import java.util.Arrays;
 
 @Configuration
 @EnableOAuth2Client
 @EnableAuthorizationServer
-public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
+public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
+
     @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
+    private DataSource dataSource;
+
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // @formatter:off
-        httpSecurity
-                .antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
-                .and()
-                .logout()
-                .logoutSuccessUrl("/")
-                .permitAll()
-                .and()
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-        // @formatter:on
+    public void configure(AuthorizationServerSecurityConfigurer authorizationServerSecurityConfigurer) throws Exception {
+        authorizationServerSecurityConfigurer.allowFormAuthenticationForClients();
+        authorizationServerSecurityConfigurer.tokenKeyAccess("isAuthenticated()");
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clientDetailsServiceConfigurer) throws Exception {
+        clientDetailsServiceConfigurer.jdbc(dataSource);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer authorizationServerEndpointsConfigurer) throws Exception {
+        authorizationServerEndpointsConfigurer.accessTokenConverter(jwtAccessTokenConverter());
+        authorizationServerEndpointsConfigurer.tokenStore(tokenStore(redisConnectionFactory));
     }
 
     @Bean
-    public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
-        FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(filter);
-        registration.setOrder(-100);
-        return registration;
+    public TokenStore jwtTokenStore() {
+        return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
     @Bean
-    @ConfigurationProperties("github")
-    public ClientResources github() {
-        return new ClientResources();
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        jwtAccessTokenConverter.setSigningKey("123");
+        return jwtAccessTokenConverter;
     }
 
     @Bean
-    @ConfigurationProperties("facebook")
-    public ClientResources facebook() {
-        return new ClientResources();
+    @Primary
+    public DefaultTokenServices defaultTokenServices() {
+        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+        defaultTokenServices.setTokenStore(tokenStore(redisConnectionFactory));
+        defaultTokenServices.setSupportRefreshToken(true);
+        defaultTokenServices.setReuseRefreshToken(false);
+        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
+        return defaultTokenServices;
     }
 
-    private Filter ssoFilter(ClientResources client, String path) {
-        OAuth2ClientAuthenticationProcessingFilter filter = new OAuth2ClientAuthenticationProcessingFilter(
-                path);
-        OAuth2RestTemplate template = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
-        filter.setRestTemplate(template);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(
-                client.getResource().getUserInfoUri(), client.getClient().getClientId());
-        tokenServices.setRestTemplate(template);
-        filter.setTokenServices(tokenServices);
-        return filter;
+    @Bean
+    public TokenEnhancerChain tokenEnhancerChain() {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(
+                Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
+        return tokenEnhancerChain;
     }
 
-    private Filter ssoFilter() {
-        CompositeFilter filter = new CompositeFilter();
-        List<Filter> filters = new ArrayList<>();
-        filters.add(ssoFilter(facebook(), "/login/facebook"));
-        filters.add(ssoFilter(github(), "/login/github"));
-        filter.setFilters(filters);
-        return filter;
-    }
-}
-
-class ClientResources {
-
-    @NestedConfigurationProperty
-    private AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
-
-    @NestedConfigurationProperty
-    private ResourceServerProperties resource = new ResourceServerProperties();
-
-    public AuthorizationCodeResourceDetails getClient() {
-        return client;
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
+        return new CustomTokenEnhancer();
     }
 
-    public ResourceServerProperties getResource() {
-        return resource;
+    @Bean
+    public TokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
+        return new RedisTokenStore(redisConnectionFactory);
     }
+
+
 }

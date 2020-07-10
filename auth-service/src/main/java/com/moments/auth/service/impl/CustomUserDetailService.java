@@ -34,6 +34,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 .stream()
                 .map(v -> {
                     UserAuthTemplate template = new UserAuthTemplate();
+                    template.setId(v.getId());
                     template.setUsername(v.getUsername());
                     template.setPassword(v.getPassword());
                     return template;
@@ -50,6 +51,7 @@ public class CustomUserDetailService implements UserDetailsService {
                 .stream()
                 .map(v -> {
                     UserAuthTemplate template = new UserAuthTemplate();
+                    template.setId(v.getId());
                     template.setUsername(v.getUsername());
                     template.setPassword(v.getPassword());
                     return template;
@@ -75,12 +77,14 @@ public class CustomUserDetailService implements UserDetailsService {
             userRoleRelPo.setUserId(userAccountPo.getId());
             userRoleRelPo.setRoleId(2);
             userRoleRelPoMapper.insertSelective(userRoleRelPo);
+            authTemplate.setId(userAccountPo.getId());
             authTemplate.setUsername(phoneNum);
 
         } else {
             authTemplate = userAccountPos.stream()
                     .map(v -> {
                         UserAuthTemplate template = new UserAuthTemplate();
+                        template.setId(v.getId());
                         template.setUsername(v.getUsername());
                         template.setPassword(v.getPassword());
                         return template;
