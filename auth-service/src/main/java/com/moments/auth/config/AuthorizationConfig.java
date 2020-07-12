@@ -1,11 +1,13 @@
 package com.moments.auth.config;
 
 import com.moments.auth.security.CustomTokenEnhancer;
+import com.moments.auth.service.impl.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -37,6 +39,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
 
     private RedisConnectionFactory redisConnectionFactory;
 
@@ -53,8 +57,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer authorizationServerEndpointsConfigurer) throws Exception {
-        authorizationServerEndpointsConfigurer.accessTokenConverter(jwtAccessTokenConverter());
-        authorizationServerEndpointsConfigurer.tokenStore(tokenStore(redisConnectionFactory));
+        authorizationServerEndpointsConfigurer
+                .tokenStore(tokenStore(redisConnectionFactory))
+                .accessTokenConverter(jwtAccessTokenConverter())
+                .userDetailsService(customUserDetailService)
+                .tokenEnhancer(tokenEnhancerChain());
     }
 
     @Bean
@@ -121,6 +128,5 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     public ClientDetailsService clientDetailsService() {
         return new JdbcClientDetailsService(dataSource);
     }
-
 
 }

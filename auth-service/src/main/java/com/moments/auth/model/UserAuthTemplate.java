@@ -1,5 +1,6 @@
 package com.moments.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +12,7 @@ public class UserAuthTemplate implements UserDetails {
     private Integer id;
     private List<GrantedAuthority> authorities;
     private String username;
+    @JsonIgnore
     private String password;
 
     @Override
