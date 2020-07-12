@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -21,13 +22,13 @@ public class RegisterEndpoint {
     private UserService userService;
 
     @PostMapping("/email")
-    public ResponseEntity<String> accountRegister(@Valid @RequestBody EmailRegisterRequest request) {
+    public ResponseEntity<String> accountRegister(@Valid @RequestBody EmailRegisterRequest request) throws MessagingException {
         userService.accountRegister(request);
         return ResponseEntity.ok("注册成功！");
     }
 
     @PostMapping("/nickname")
-    public ResponseEntity<String> accountRegister(@Valid @RequestBody NicknameRegisterRequest request) {
+    public ResponseEntity<String> accountRegister(@Valid @RequestBody NicknameRegisterRequest request) throws MessagingException {
         userService.accountRegister(request);
         return ResponseEntity.ok("注册成功！");
     }

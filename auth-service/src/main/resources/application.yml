@@ -17,6 +17,22 @@ spring:
       jdbc-url: jdbc:mysql://localhost:3306/moments?useUnicode=true&characterEncoding=UTF-8&useSSL=FALSE&serverTimezone=Asia/Shanghai&allowMultiQueries=true
       username: root
       password: root
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: xxxxxxx@qq.com
+    password: xxxxxxxxx
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          ssl:
+            enable: true
 
 facebook:
   client:
