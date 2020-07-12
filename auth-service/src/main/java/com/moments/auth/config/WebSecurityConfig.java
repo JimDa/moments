@@ -21,9 +21,6 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
 
@@ -52,9 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //静态资源放行配置
     @Override
     public void configure(WebSecurity webSecurity) {
-//        webSecurity
-//                .ignoring()
-//                .antMatchers("/assets/**", "/css/**", "/images/**");
+        webSecurity
+                .ignoring()
+                .antMatchers("/html/**", "/css/**", "/images/**");
     }
 
     //框架自带接口放行配置
@@ -62,15 +59,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // @formatter:off
         httpSecurity
+                .formLogin()
+                .permitAll()
+                .loginPage("/html/index.html")
+                .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**")
                 .authenticated()
-                .and().csrf()
+                .and()
+                .csrf()
                 .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
                 .disable()
-                .formLogin()
-                .permitAll()
-                .and()
                 .logout()
                 .permitAll()
                 .and();
