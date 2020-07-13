@@ -76,7 +76,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         return jwtAccessTokenConverter;
     }
 
-    @Bean
+    @Bean(name = "tokenService")
     @Primary
     public DefaultTokenServices defaultTokenServices() {
         final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
@@ -101,7 +101,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
-    public TokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
         return new RedisTokenStore(redisConnectionFactory);
     }
 
