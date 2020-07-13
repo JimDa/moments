@@ -82,7 +82,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
         defaultTokenServices.setTokenStore(tokenStore(redisConnectionFactory));
         defaultTokenServices.setSupportRefreshToken(true);
-        defaultTokenServices.setReuseRefreshToken(false);
+        defaultTokenServices.setReuseRefreshToken(true);
         defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
         return defaultTokenServices;
     }

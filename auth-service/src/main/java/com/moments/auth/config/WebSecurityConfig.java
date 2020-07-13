@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) {
         webSecurity
                 .ignoring()
-                .antMatchers("/html/**", "/css/**", "/images/**");
+                .antMatchers("/html/**", "/css/**", "/images/**", "/js/**", "/fonts/**");
     }
 
     //框架自带接口放行配置
@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 .formLogin()
                 .permitAll()
-                .loginPage("/html/index.html")
+//                .loginPage("/html/index.html")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/oauth/**")

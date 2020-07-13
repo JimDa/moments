@@ -20,6 +20,7 @@
         <!--  XML生成路径  -->
         <targetResourcesProject>${basedir}/src/main/java</targetResourcesProject>
         <targetXMLPackage>com.moments.auth.dao</targetXMLPackage>
+        <aliyun.version>4.1.1</aliyun.version>
     </properties>
 
     <parent>
@@ -89,6 +90,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--阿里云发短信-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>${aliyun.version}</version>
         </dependency>
 
         <dependency>

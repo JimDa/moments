@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class AuthApplication {
 
     public static void main(String[] args) {
-//        System.out.println(String.format("密码为%s。",new BCryptPasswordEncoder().encode("123")));
+        System.out.println(String.format("密码为%s。",new BCryptPasswordEncoder().encode("123")));
         SpringApplication.run(AuthApplication.class, args);
     }
 
