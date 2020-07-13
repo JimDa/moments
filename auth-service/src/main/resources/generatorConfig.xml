@@ -69,20 +69,23 @@
 <!--            <property name="rootInterface" value="com.moments.auth.dao" />-->
         </javaClientGenerator>
 
-        <table tableName="user" domainObjectName="User" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
+<!--        <table tableName="user" domainObjectName="User" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
 
-        <table tableName="auth_user_account" domainObjectName="UserAccountPo" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
-        <table tableName="auth_user_role" domainObjectName="UserRolePo" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
-        <table tableName="auth_user_role_rel" domainObjectName="UserRoleRelPo" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
-        <table tableName="auth_third_party_access" domainObjectName="ThirdPartyAccessPo" enableCountByExample="true"
+<!--        <table tableName="auth_user_account" domainObjectName="UserAccountPo" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
+<!--        <table tableName="auth_user_role" domainObjectName="UserRolePo" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
+<!--        <table tableName="auth_user_role_rel" domainObjectName="UserRoleRelPo" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
+<!--        <table tableName="auth_third_party_access" domainObjectName="ThirdPartyAccessPo" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
+        <table tableName="auth_sms_template" domainObjectName="SmsTemplatePo" enableCountByExample="true"
                enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
                selectByExampleQueryId="true"/>
     </context>
