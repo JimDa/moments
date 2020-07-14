@@ -1,5 +1,6 @@
 package com.moments.auth.config;
 
+import com.moments.auth.filter.TokenAuthenticationFilter;
 import com.moments.auth.handler.OAuth2AuthenticationFailureHandler;
 import com.moments.auth.handler.OAuth2AuthenticationSuccessHandler;
 import com.moments.auth.security.ClientResources;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,6 +32,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CompositeFilter;
 
@@ -55,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Override
     protected void configure(AuthenticationManagerBuilder builder) throws Exception {
@@ -67,7 +72,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity webSecurity) {
         webSecurity
                 .ignoring()
-                .antMatchers("/html/**", "/css/**", "/images/**", "/js/**", "/fonts/**");
+                .antMatchers(
+                        "/html/**",
+                        "/css/**",
+                        "/images/**",
+                        "/js/**",
+                        "/fonts/**");
     }
 
     //框架自带接口放行配置
@@ -114,8 +124,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .permitAll()
                 .and()
-                .authenticationProvider(new CustomAuthenticationProvider(customUserDetailService, bCryptPasswordEncoder))
+                .authenticationProvider(
+                        new CustomAuthenticationProvider(customUserDetailService,
+                                bCryptPasswordEncoder, stringRedisTemplate))
         ;
+        httpSecurity.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 //        httpSecurity.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         // @formatter:on
     }
@@ -176,4 +189,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    public CustomAuthenticationFilter tokenAuthenticationFilter() {
 //        return new CustomAuthenticationFilter();
 //    }
+
+    @Bean
+    public TokenAuthenticationFilter tokenAuthenticationFilter() {
+        return new TokenAuthenticationFilter();
+    }
 }

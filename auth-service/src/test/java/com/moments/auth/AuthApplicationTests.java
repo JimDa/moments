@@ -42,7 +42,7 @@ public class AuthApplicationTests {
     }
 
     @Test
-    public void sendMsg() {
+    public void sendMsg() throws Exception {
         AliSmsResponse aliSmsResponse = aliSmsService.sendMessage("13817176315");
         System.out.println(aliSmsResponse);
     }

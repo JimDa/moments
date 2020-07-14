@@ -1,4 +1,4 @@
-package com.moments.auth.endpoint;
+package com.moments.auth.util;
 
 
 import java.net.NetworkInterface;

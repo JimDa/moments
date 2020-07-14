@@ -19,6 +19,8 @@ import com.moments.auth.model.response.AliSmsResponse;
 import com.moments.auth.service.AliSmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -37,9 +39,11 @@ public class AliSmsServiceImpl implements AliSmsService {
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private SmsTemplatePoMapper smsTemplatePoMapper;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public AliSmsResponse sendMessage(String phoneNum) {
+    public AliSmsResponse sendMessage(String phoneNum) throws Exception {
         ThirdPartyAccessPoExample example = new ThirdPartyAccessPoExample();
         example.createCriteria()
                 .andServiceNameEqualTo("aliSms");
@@ -64,7 +68,7 @@ public class AliSmsServiceImpl implements AliSmsService {
                     .stream()
                     .findFirst();
             if (templatePo.isPresent()) {
-                request.putQueryParameter("SignName", templatePo.get().getTemplateName());
+                request.putQueryParameter("SignName", "ezblog短信验证");
                 request.putQueryParameter("TemplateCode", templatePo.get().getTemplateCode());
                 String verifyCode = getRandomCode();
                 request.putQueryParameter("TemplateParam", String.format("{\"code\":\"%s\"}", verifyCode));
@@ -73,11 +77,14 @@ public class AliSmsServiceImpl implements AliSmsService {
                     CommonResponse response = client.getCommonResponse(request);
                     System.out.println(response.getData());
                     message = response.getData();
-                    stringRedisTemplate.opsForValue().set("ALI_SMS:".concat(phoneNum), verifyCode, 5, TimeUnit.MINUTES);
+                    String encodedVerifyCode = bCryptPasswordEncoder.encode(verifyCode);
+                    stringRedisTemplate.opsForValue().set("ALI_SMS:".concat(phoneNum), encodedVerifyCode, 1, TimeUnit.MINUTES);
                 } catch (ServerException e) {
                     e.printStackTrace();
+                    throw new ServerException("500", result.getMessage());
                 } catch (ClientException e) {
                     e.printStackTrace();
+                    throw new ServerException("500", result.getMessage());
                 }
                 result = StringUtils.isEmpty(message) ? result : gson.fromJson(message, AliSmsResponse.class);
             }

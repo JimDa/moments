@@ -41,13 +41,13 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     private DataSource dataSource;
     @Autowired
     private CustomUserDetailService customUserDetailService;
-
-    private RedisConnectionFactory redisConnectionFactory;
+//
+//    private RedisConnectionFactory redisConnectionFactory;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer authorizationServerSecurityConfigurer) throws Exception {
-        authorizationServerSecurityConfigurer.allowFormAuthenticationForClients();
-        authorizationServerSecurityConfigurer.tokenKeyAccess("isAuthenticated()");
+//        authorizationServerSecurityConfigurer.allowFormAuthenticationForClients();
+        authorizationServerSecurityConfigurer.allowFormAuthenticationForClients().checkTokenAccess("permitAll()");
     }
 
 //    @Override
@@ -58,75 +58,75 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer authorizationServerEndpointsConfigurer) throws Exception {
         authorizationServerEndpointsConfigurer
-                .tokenStore(tokenStore(redisConnectionFactory))
-                .accessTokenConverter(jwtAccessTokenConverter())
-                .userDetailsService(customUserDetailService)
-                .tokenEnhancer(tokenEnhancerChain());
+//                .tokenStore(jwtTokenStore())
+//                .accessTokenConverter(jwtAccessTokenConverter())
+                .userDetailsService(customUserDetailService);
+//                .tokenEnhancer(tokenEnhancerChain());
     }
 
-    @Bean
-    public TokenStore jwtTokenStore() {
-        return new JwtTokenStore(jwtAccessTokenConverter());
-    }
+//    @Bean
+//    public TokenStore jwtTokenStore() {
+//        return new JwtTokenStore(jwtAccessTokenConverter());
+//    }
 
-    @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setSigningKey("123");
-        return jwtAccessTokenConverter;
-    }
+//    @Bean
+//    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+//        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+//        jwtAccessTokenConverter.setSigningKey("123");
+//        return jwtAccessTokenConverter;
+//    }
 
-    @Bean(name = "tokenService")
-    @Primary
-    public DefaultTokenServices defaultTokenServices() {
-        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore(redisConnectionFactory));
-        defaultTokenServices.setSupportRefreshToken(true);
-        defaultTokenServices.setReuseRefreshToken(true);
-        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
-        return defaultTokenServices;
-    }
+//    @Bean(name = "tokenService")
+//    @Primary
+//    public DefaultTokenServices defaultTokenServices() {
+//        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
+//        defaultTokenServices.setTokenStore(jwtTokenStore());
+//        defaultTokenServices.setSupportRefreshToken(true);
+//        defaultTokenServices.setReuseRefreshToken(true);
+//        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain());
+//        return defaultTokenServices;
+//    }
 
-    @Bean
-    public TokenEnhancerChain tokenEnhancerChain() {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(
-                Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
-        return tokenEnhancerChain;
-    }
+//    @Bean
+//    public TokenEnhancerChain tokenEnhancerChain() {
+//        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+//        tokenEnhancerChain.setTokenEnhancers(
+//                Arrays.asList(tokenEnhancer(), jwtAccessTokenConverter()));
+//        return tokenEnhancerChain;
+//    }
 
-    @Bean
-    public TokenEnhancer tokenEnhancer() {
-        return new CustomTokenEnhancer();
-    }
+//    @Bean
+//    public TokenEnhancer tokenEnhancer() {
+//        return new CustomTokenEnhancer();
+//    }
 
-    @Bean
-    public RedisTokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
-        return new RedisTokenStore(redisConnectionFactory);
-    }
+//    @Bean
+//    public RedisTokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
+//        return new RedisTokenStore(redisConnectionFactory);
+//    }
 
-    @Bean
-    public TokenGranter tokenGranter() {
+//    @Bean
+//    public TokenGranter tokenGranter() {
+//
+//        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
+//
+//        AuthorizationCodeServices codeServices = authorizationCodeServices();
+//
+//        AuthorizationServerTokenServices tokenServices = defaultTokenServices();
+//        List<TokenGranter> tokenGranters = Arrays.asList(
+//                new AuthorizationCodeTokenGranter(tokenServices, codeServices, clientDetailsService(), requestFactory));
+//
+//        return new CompositeTokenGranter(tokenGranters);
+//    }
 
-        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
+//    @Bean
+//    public AuthorizationCodeServices authorizationCodeServices() {
+//        return new InMemoryAuthorizationCodeServices();
+//    }
 
-        AuthorizationCodeServices codeServices = authorizationCodeServices();
-
-        AuthorizationServerTokenServices tokenServices = defaultTokenServices();
-        List<TokenGranter> tokenGranters = Arrays.asList(
-                new AuthorizationCodeTokenGranter(tokenServices, codeServices, clientDetailsService(), requestFactory));
-
-        return new CompositeTokenGranter(tokenGranters);
-    }
-
-    @Bean
-    public AuthorizationCodeServices authorizationCodeServices() {
-        return new InMemoryAuthorizationCodeServices();
-    }
-
-    @Bean
-    public ClientDetailsService clientDetailsService() {
-        return new JdbcClientDetailsService(dataSource);
-    }
+//    @Bean
+//    public ClientDetailsService clientDetailsService() {
+//        return new JdbcClientDetailsService(dataSource);
+//    }
 
 }

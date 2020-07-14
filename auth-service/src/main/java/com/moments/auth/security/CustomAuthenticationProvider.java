@@ -1,8 +1,10 @@
 package com.moments.auth.security;
 
+import com.moments.auth.model.UserPrincipal;
 import com.moments.auth.model.exception.UserEmailNotFoundException;
 import com.moments.auth.model.exception.UserPhoneNumNotFoundException;
 import com.moments.auth.service.impl.CustomUserDetailService;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -17,14 +19,19 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
     private PasswordEncoder passwordEncoder;
     private volatile String userNotFoundEncodedPassword;
     private CustomUserDetailService customUserDetailService;
+    private StringRedisTemplate stringRedisTemplate;
 
     public CustomAuthenticationProvider() {
         this.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
 
-    public CustomAuthenticationProvider(CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) {
-        this.setUserDetailsService(customUserDetailService);
-        this.setPasswordEncoder(passwordEncoder);
+    public CustomAuthenticationProvider(CustomUserDetailService customUserDetailService,
+                                        PasswordEncoder passwordEncoder,
+                                        StringRedisTemplate stringRedisTemplate
+    ) {
+        this.customUserDetailService = customUserDetailService;
+        this.passwordEncoder = passwordEncoder;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
         this.prepareTimingAttackProtection();
         String type = (String) authentication.getType();
         try {
-            UserDetails loadedUser;
+            UserPrincipal loadedUser;
             switch (type) {
                 case "phoneNum":
                     loadedUser = this.getUserDetailsService().loadByPhoneNum(username);
@@ -59,6 +66,10 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
                 case "email":
                     loadedUser = this.getUserDetailsService().loadByEmail(username);
                     break;
+                case "verify_code":
+                    loadedUser = this.getUserDetailsService().loadByPhoneNum(username);
+                    String encodedVerifyCode = stringRedisTemplate.opsForValue().get("ALI_SMS:".concat(username));
+                    loadedUser.setPassword(encodedVerifyCode);
                 default:
                     loadedUser = this.getUserDetailsService().loadUserByUsername(username);
                     break;

@@ -13,13 +13,17 @@ import java.util.Map;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
     private Long id;
+    private String username;
+    private String phoneNum;
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String username,String phoneNum, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
+        this.username = username;
+        this.phoneNum = phoneNum;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -31,6 +35,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
         return new UserPrincipal(
                 user.getId().longValue(),
+                user.getUsername(),
+                user.getPhoneNum(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities
@@ -44,21 +50,21 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return this.username;
     }
 
     @Override
@@ -88,7 +94,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return this.attributes;
     }
 
     public void setAttributes(Map<String, Object> attributes) {
@@ -98,5 +104,33 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     @Override
     public String getName() {
         return String.valueOf(id);
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPhoneNum() {
+        return this.phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 }

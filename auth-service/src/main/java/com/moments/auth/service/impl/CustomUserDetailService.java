@@ -29,49 +29,37 @@ public class CustomUserDetailService implements UserDetailsService {
     private UserRoleRelPoMapper userRoleRelPoMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserPrincipal loadUserByUsername(String username) throws UsernameNotFoundException {
         UserAccountPoExample userAccountPoExample = new UserAccountPoExample();
         userAccountPoExample.createCriteria()
                 .andUsernameEqualTo(username);
         return userAccountPoMapper.selectByExample(userAccountPoExample)
                 .stream()
-                .map(v -> {
-                    UserAuthTemplate template = new UserAuthTemplate();
-                    template.setId(v.getId());
-                    template.setUsername(v.getUsername());
-                    template.setPassword(v.getPassword());
-                    return template;
-                })
+                .map(v -> UserPrincipal.create(v))
                 .findFirst()
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("cannot find account of username: %s!", username)));
     }
 
-    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
+    public UserPrincipal loadUserById(Long id) throws UsernameNotFoundException {
 
         UserAccountPo user = Optional.ofNullable(userAccountPoMapper.selectByPrimaryKey(id.intValue()))
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
         return UserPrincipal.create(user);
     }
 
-    public UserDetails loadByEmail(String email) throws UserEmailNotFoundException {
+    public UserPrincipal loadByEmail(String email) throws UserEmailNotFoundException {
         UserAccountPoExample userAccountPoExample = new UserAccountPoExample();
         userAccountPoExample.createCriteria()
                 .andEmailEqualTo(email);
         return userAccountPoMapper.selectByExample(userAccountPoExample)
                 .stream()
-                .map(v -> {
-                    UserAuthTemplate template = new UserAuthTemplate();
-                    template.setId(v.getId());
-                    template.setUsername(v.getUsername());
-                    template.setPassword(v.getPassword());
-                    return template;
-                })
+                .map(v -> UserPrincipal.create(v))
                 .findFirst()
                 .orElseThrow(() -> new UserEmailNotFoundException(String.format("cannot find account of email: %s!", email)));
     }
 
-    public UserDetails loadByPhoneNum(String phoneNum) throws UserPhoneNumNotFoundException {
-        UserAuthTemplate authTemplate = new UserAuthTemplate();
+    public UserPrincipal loadByPhoneNum(String phoneNum) throws UserPhoneNumNotFoundException {
+        UserPrincipal principal = new UserPrincipal(null, null, null, null, null, null);
 
         UserAccountPoExample userAccountPoExample = new UserAccountPoExample();
         userAccountPoExample.createCriteria()
@@ -87,21 +75,15 @@ public class CustomUserDetailService implements UserDetailsService {
             userRoleRelPo.setUserId(userAccountPo.getId());
             userRoleRelPo.setRoleId(2);
             userRoleRelPoMapper.insertSelective(userRoleRelPo);
-            authTemplate.setId(userAccountPo.getId());
-            authTemplate.setUsername(phoneNum);
+            principal.setId(userAccountPo.getId().longValue());
+            principal.setPhoneNum(phoneNum);
 
         } else {
-            authTemplate = userAccountPos.stream()
-                    .map(v -> {
-                        UserAuthTemplate template = new UserAuthTemplate();
-                        template.setId(v.getId());
-                        template.setUsername(v.getUsername());
-                        template.setPassword(v.getPassword());
-                        return template;
-                    })
+            principal = userAccountPos.stream()
+                    .map(v -> UserPrincipal.create(v))
                     .findFirst()
                     .orElseThrow(() -> new UserPhoneNumNotFoundException(String.format("cannot find account of phone: %s!", phoneNum)));
         }
-        return authTemplate;
+        return principal;
     }
 }
