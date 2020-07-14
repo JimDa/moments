@@ -9,6 +9,7 @@ import com.moments.auth.model.request.EmailRegisterRequest;
 import com.moments.auth.model.request.NicknameRegisterRequest;
 import com.moments.auth.model.request.RequestSchema;
 import com.moments.auth.service.UserService;
+import com.moments.auth.util.MailSenderUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    private JavaMailSender javaMailSender;
+    private MailSenderUtil mailSenderUtil;
 
     @Override
     public List<User> queryAll() {
@@ -50,12 +52,10 @@ public class UserServiceImpl implements UserService {
                 EmailRegisterRequest emailRegisterRequest = (EmailRegisterRequest) request;
                 account.setEmail(emailRegisterRequest.getEmail());
                 account.setPassword(passwordEncoder.encode(emailRegisterRequest.getPassword()));
-                MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-                helper.setTo(emailRegisterRequest.getEmail());
-                helper.setSubject("注册提醒");
-                helper.setText(String.format("恭喜%s注册成功！", emailRegisterRequest.getEmail()));
-                javaMailSender.send(mimeMessage);
+                String msg = String.format("恭喜%s注册成功！", emailRegisterRequest.getEmail());
+                String email = emailRegisterRequest.getEmail();
+                String subject = "注册提醒";
+                mailSenderUtil.sendMsgTo(msg, email, subject);
                 break;
             case "nickname":
                 NicknameRegisterRequest nicknameRegisterRequest = (NicknameRegisterRequest) request;

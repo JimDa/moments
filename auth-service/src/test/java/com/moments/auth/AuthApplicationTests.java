@@ -31,13 +31,13 @@ public class AuthApplicationTests {
     public void sendEmail() throws MessagingException {
         EmailRegisterRequest request = new EmailRegisterRequest();
         request.setType("email");
-        request.setEmail("dapengcheng2011@hotmail.com");
+        request.setEmail("xushengkai.cooll@163.com");
         request.setPassword("123");
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("1085529137@qq.com");
         simpleMailMessage.setText(String.format("恭喜%s注册成功！", request.getEmail()));
         simpleMailMessage.setSubject("注册提醒");
-        simpleMailMessage.setTo("dapengcheng2017@gmail.com");
+        simpleMailMessage.setTo("xushengkai.cooll@163.com");
         javaMailSender.send(simpleMailMessage);
     }
 

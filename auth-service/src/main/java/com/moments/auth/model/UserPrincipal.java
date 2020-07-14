@@ -1,5 +1,6 @@
 package com.moments.auth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moments.auth.model.PO.UserAccountPo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String username;
     private String phoneNum;
     private String email;
+    @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
