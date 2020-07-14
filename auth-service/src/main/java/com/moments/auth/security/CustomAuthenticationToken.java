@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {
-    private final Object principal;
+    private Object principal;
     private Object credentials;
     private Object type;
 

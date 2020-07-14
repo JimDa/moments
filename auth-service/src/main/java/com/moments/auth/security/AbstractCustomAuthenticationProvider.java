@@ -43,7 +43,7 @@ public abstract class AbstractCustomAuthenticationProvider implements Authentica
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        Assert.isInstanceOf(AbstractCustomAuthenticationProvider.class, authentication, this.messages.getMessage("AbstractCustomAuthenticationProvider.onlySupports", "Only CustomAuthenticationToken is supported"));
+        Assert.isInstanceOf(CustomAuthenticationToken.class, authentication, this.messages.getMessage("AbstractCustomAuthenticationProvider.onlySupports", "Only CustomAuthenticationToken is supported"));
         String username = authentication.getPrincipal() == null ? "NONE_PROVIDED" : authentication.getName();
         boolean cacheWasUsed = true;
         UserDetails user = this.userCache.getUserFromCache(username);

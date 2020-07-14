@@ -22,6 +22,11 @@ public class CustomAuthenticationProvider extends AbstractCustomAuthenticationPr
         this.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
 
+    public CustomAuthenticationProvider(CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) {
+        this.setUserDetailsService(customUserDetailService);
+        this.setPasswordEncoder(passwordEncoder);
+    }
+
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, CustomAuthenticationToken authentication) throws AuthenticationException {
         if (authentication.getCredentials() == null) {
