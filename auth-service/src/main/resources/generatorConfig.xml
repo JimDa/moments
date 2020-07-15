@@ -73,9 +73,9 @@
 <!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
 <!--               selectByExampleQueryId="true"/>-->
 
-<!--        <table tableName="auth_user_account" domainObjectName="UserAccountPo" enableCountByExample="true"-->
-<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
-<!--               selectByExampleQueryId="true"/>-->
+        <table tableName="auth_user_account" domainObjectName="UserAccountPo" enableCountByExample="true"
+               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
+               selectByExampleQueryId="true"/>
 <!--        <table tableName="auth_user_role" domainObjectName="UserRolePo" enableCountByExample="true"-->
 <!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
 <!--               selectByExampleQueryId="true"/>-->
@@ -85,8 +85,8 @@
 <!--        <table tableName="auth_third_party_access" domainObjectName="ThirdPartyAccessPo" enableCountByExample="true"-->
 <!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
 <!--               selectByExampleQueryId="true"/>-->
-        <table tableName="auth_sms_template" domainObjectName="SmsTemplatePo" enableCountByExample="true"
-               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"
-               selectByExampleQueryId="true"/>
+<!--        <table tableName="auth_sms_template" domainObjectName="SmsTemplatePo" enableCountByExample="true"-->
+<!--               enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true"-->
+<!--               selectByExampleQueryId="true"/>-->
     </context>
 </generatorConfiguration>

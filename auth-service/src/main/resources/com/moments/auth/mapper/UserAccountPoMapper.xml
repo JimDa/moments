@@ -14,6 +14,8 @@
     <result column="editor" jdbcType="VARCHAR" property="editor" />
     <result column="edit_date" jdbcType="TIMESTAMP" property="editDate" />
     <result column="wechat_openid" jdbcType="VARCHAR" property="wechatOpenid" />
+    <result column="github_openid" jdbcType="VARCHAR" property="githubOpenid" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, username, email, phone_num, `password`, gender, birth_date, create_date, creator, 
-    editor, edit_date, wechat_openid
+    editor, edit_date, wechat_openid, github_openid, avatar_url
   </sql>
   <select id="selectByExample" parameterType="com.moments.auth.model.example.UserAccountPoExample" resultMap="BaseResultMap">
     select
@@ -112,15 +114,15 @@
     insert into auth_user_account (id, username, email, 
       phone_num, `password`, gender, 
       birth_date, create_date, creator, 
-      editor, edit_date, wechat_openid
-      )
+      editor, edit_date, wechat_openid, 
+      github_openid, avatar_url)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{phoneNum,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, 
       #{birthDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
-      #{editor,jdbcType=VARCHAR}, #{editDate,jdbcType=TIMESTAMP}, #{wechatOpenid,jdbcType=VARCHAR}
-      )
+      #{editor,jdbcType=VARCHAR}, #{editDate,jdbcType=TIMESTAMP}, #{wechatOpenid,jdbcType=VARCHAR}, 
+      #{githubOpenid,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.moments.auth.model.PO.UserAccountPo" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insertSelective" parameterType="com.moments.auth.model.PO.UserAccountPo" keyProperty="id" useGeneratedKeys="true">
     insert into auth_user_account
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -159,6 +161,12 @@
       <if test="wechatOpenid != null">
         wechat_openid,
       </if>
+      <if test="githubOpenid != null">
+        github_openid,
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -196,6 +204,12 @@
       </if>
       <if test="wechatOpenid != null">
         #{wechatOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="githubOpenid != null">
+        #{githubOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        #{avatarUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -244,6 +258,12 @@
       <if test="record.wechatOpenid != null">
         wechat_openid = #{record.wechatOpenid,jdbcType=VARCHAR},
       </if>
+      <if test="record.githubOpenid != null">
+        github_openid = #{record.githubOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.avatarUrl != null">
+        avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -262,7 +282,9 @@
       creator = #{record.creator,jdbcType=VARCHAR},
       editor = #{record.editor,jdbcType=VARCHAR},
       edit_date = #{record.editDate,jdbcType=TIMESTAMP},
-      wechat_openid = #{record.wechatOpenid,jdbcType=VARCHAR}
+      wechat_openid = #{record.wechatOpenid,jdbcType=VARCHAR},
+      github_openid = #{record.githubOpenid,jdbcType=VARCHAR},
+      avatar_url = #{record.avatarUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -303,6 +325,12 @@
       <if test="wechatOpenid != null">
         wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
       </if>
+      <if test="githubOpenid != null">
+        github_openid = #{githubOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -318,7 +346,9 @@
       creator = #{creator,jdbcType=VARCHAR},
       editor = #{editor,jdbcType=VARCHAR},
       edit_date = #{editDate,jdbcType=TIMESTAMP},
-      wechat_openid = #{wechatOpenid,jdbcType=VARCHAR}
+      wechat_openid = #{wechatOpenid,jdbcType=VARCHAR},
+      github_openid = #{githubOpenid,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

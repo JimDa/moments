@@ -41,21 +41,21 @@ spring:
           google:
             clientId: 5014057553-8gm9um6vnli3cle5rgigcdjpdrid14m9.apps.googleusercontent.com
             clientSecret: tWZKVLxaD_ARWsriiiUFYoIk
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           facebook:
             clientId: 121189305185277
             clientSecret: 42ffe5aa7379e8326387e0fe16f34132
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
           github:
-            clientId: d3e47fc2ddd966fa4352
-            clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
-            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            clientId: dbfaed2e681d18e8c4e4
+            clientSecret: c3df86f2b0d538dfc5260e5368647ae3e352c015
+            redirectUriTemplate: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - user:email
               - read:user
@@ -75,27 +75,27 @@ app:
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - http://localhost:3000/oauth2/redirect
+      - http://192.160.0.71:8080/auth-service/oauth2/callback/github
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
 
-facebook:
-  client:
-    clientId: 233668646673605
-    clientSecret: 33b17e044ee6a4fa383f46ec6e28ea1d
-    accessTokenUri: https://graph.facebook.com/oauth/access_token
-    userAuthorizationUri: https://www.facebook.com/dialog/oauth
-    tokenName: oauth_token
-    authenticationScheme: query
-    clientAuthenticationScheme: form
-  resource:
-    userInfoUri: https://graph.facebook.com/me
-github:
-  client:
-    clientId: bd1c0a783ccdd1c9b9e4
-    clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
-    accessTokenUri: https://github.com/login/oauth/access_token
-    userAuthorizationUri: https://github.com/login/oauth/authorize
-    clientAuthenticationScheme: form
-  resource:
-    userInfoUri: https://api.github.com/user
+#facebook:
+#  client:
+#    clientId: 233668646673605
+#    clientSecret: 33b17e044ee6a4fa383f46ec6e28ea1d
+#    accessTokenUri: https://graph.facebook.com/oauth/access_token
+#    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+#    tokenName: oauth_token
+#    authenticationScheme: query
+#    clientAuthenticationScheme: form
+#  resource:
+#    userInfoUri: https://graph.facebook.com/me
+#github:
+#  client:
+#    clientId: bd1c0a783ccdd1c9b9e4
+#    clientSecret: 1a9030fbca47a5b2c28e92f19050bb77824b5ad1
+#    accessTokenUri: https://github.com/login/oauth/access_token
+#    userAuthorizationUri: https://github.com/login/oauth/authorize
+#    clientAuthenticationScheme: form
+#  resource:
+#    userInfoUri: https://api.github.com/user

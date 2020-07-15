@@ -28,6 +28,10 @@ public class UserAccountPo implements Serializable {
 
     private String wechatOpenid;
 
+    private String githubOpenid;
+
+    private String avatarUrl;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -124,5 +128,21 @@ public class UserAccountPo implements Serializable {
 
     public void setWechatOpenid(String wechatOpenid) {
         this.wechatOpenid = wechatOpenid == null ? null : wechatOpenid.trim();
+    }
+
+    public String getGithubOpenid() {
+        return githubOpenid;
+    }
+
+    public void setGithubOpenid(String githubOpenid) {
+        this.githubOpenid = githubOpenid == null ? null : githubOpenid.trim();
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl == null ? null : avatarUrl.trim();
     }
 }

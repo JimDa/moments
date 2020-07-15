@@ -22,7 +22,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String username,String phoneNum, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String username, String phoneNum, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.phoneNum = phoneNum;
@@ -45,8 +45,15 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         );
     }
 
-    public static UserPrincipal create(UserAccountPo user, Map<String, Object> attributes) {
+    public static UserPrincipal create(UserAccountPo user, Map<String, Object> attributes, String registrationId) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
+        switch (registrationId) {
+            case "github" :
+                userPrincipal.setUsername(attributes.get("login").toString());
+                break;
+            case "wechat" :
+                break;
+        }
         userPrincipal.setAttributes(attributes);
         return userPrincipal;
     }

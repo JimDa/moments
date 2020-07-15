@@ -3,16 +3,12 @@ package com.moments.auth.config;
 import com.moments.auth.filter.TokenAuthenticationFilter;
 import com.moments.auth.handler.OAuth2AuthenticationFailureHandler;
 import com.moments.auth.handler.OAuth2AuthenticationSuccessHandler;
-//import com.moments.auth.security.ClientResources;
 import com.moments.auth.security.CustomAuthenticationProvider;
 import com.moments.auth.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.moments.auth.security.RestAuthenticationEntryPoint;
 import com.moments.auth.service.CustomOAuth2UserService;
 import com.moments.auth.service.impl.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-//import org.springframework.boot.context.properties.ConfigurationProperties;
-//import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -29,17 +25,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+//import com.moments.auth.security.ClientResources;
+//import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+//import org.springframework.boot.context.properties.ConfigurationProperties;
+//import org.springframework.boot.web.servlet.FilterRegistrationBean;
 //import org.springframework.security.oauth2.client.OAuth2ClientContext;
 //import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 //import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 //import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.filter.CompositeFilter;
-
-import javax.servlet.Filter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -55,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomUserDetailService customUserDetailService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-//    @Autowired
+    //    @Autowired
 //    private OAuth2ClientContext oauth2ClientContext;
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -97,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf()
-                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
+                .requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth2/authorize/**"))
                 .disable()
                 .formLogin()
                 .disable()
@@ -107,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/oauth2/**","/register/**")
+                .antMatchers("/auth/**", "/oauth2/**", "/register/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
