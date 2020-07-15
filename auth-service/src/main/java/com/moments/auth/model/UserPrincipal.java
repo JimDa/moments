@@ -50,6 +50,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         switch (registrationId) {
             case "github" :
                 userPrincipal.setUsername(attributes.get("login").toString());
+                user.setUsername(userPrincipal.getUsername());
                 break;
             case "wechat" :
                 break;

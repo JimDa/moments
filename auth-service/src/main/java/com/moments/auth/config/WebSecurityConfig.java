@@ -79,7 +79,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/css/**",
                         "/images/**",
                         "/js/**",
-                        "/fonts/**");
+                        "/fonts/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/v2/**",
+                        "/swagger-resources/**"
+                );
     }
 
     //框架自带接口放行配置
