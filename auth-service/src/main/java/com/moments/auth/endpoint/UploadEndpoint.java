@@ -2,6 +2,8 @@ package com.moments.auth.endpoint;
 
 
 import com.moments.auth.service.StorageService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@Api
 @RestController
 @RequestMapping(value = "/upload")
 public class UploadEndpoint {
@@ -19,6 +22,7 @@ public class UploadEndpoint {
     private StorageService storageService;
 
     @PostMapping(value = "/file")
+    @ApiOperation(value = "上传文件")
     public ResponseEntity handleUploads(@RequestParam("file") MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();

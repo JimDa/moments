@@ -13,6 +13,8 @@ import com.moments.auth.model.response.AuthResponse;
 import com.moments.auth.security.CustomAuthenticationToken;
 import com.moments.auth.security.TokenProvider;
 import com.moments.auth.service.AliSmsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -25,10 +27,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.net.URI;
 
+@Api
 @RestController
 @RequestMapping("/auth")
 public class AuthEndpoint {
@@ -46,6 +50,7 @@ public class AuthEndpoint {
 
 
     @PostMapping("/login")
+    @ApiOperation(value = "登陆接口")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody CustomLoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -63,6 +68,7 @@ public class AuthEndpoint {
     }
 
     @PostMapping("/signup")
+    @ApiIgnore
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         UserAccountPoExample example = new UserAccountPoExample();
         example.createCriteria()
@@ -91,6 +97,7 @@ public class AuthEndpoint {
     }
 
     @GetMapping(value = "/verify-code")
+    @ApiOperation(value = "获取授权码")
     public ResponseEntity<String> getVerifyCode(@RequestParam String phoneNum) {
         ResponseEntity responseEntity;
         try {

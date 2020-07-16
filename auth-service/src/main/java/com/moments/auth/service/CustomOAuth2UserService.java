@@ -67,7 +67,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //                        user.getProvider() + " account. Please use your " + user.getProvider() +
 //                        " account to login.");
 //            }
-//            user = updateExistingUser(user, oAuth2UserInfo);
+            user = updateExistingUser(user, oAuth2UserInfo);
         } else {
             user = registerNewUser(oAuth2UserRequest, oAuth2UserInfo);
         }
@@ -96,7 +96,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private UserAccountPo updateExistingUser(UserAccountPo existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.setUsername(oAuth2UserInfo.getName());
-//        existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
+        existingUser.setEmail(oAuth2UserInfo.getEmail());
+        existingUser.setAvatarUrl(oAuth2UserInfo.getImageUrl());
         userAccountPoMapper.updateByPrimaryKeySelective(existingUser);
         return existingUser;
     }

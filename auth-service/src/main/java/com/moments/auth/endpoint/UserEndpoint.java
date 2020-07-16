@@ -5,6 +5,8 @@ import com.moments.auth.model.UserAuthTemplate;
 import com.moments.auth.model.UserPrincipal;
 import com.moments.auth.model.request.RequestSchema;
 import com.moments.auth.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.security.oauth2.provider.token.TokenStore;
 //import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -23,6 +26,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+@Api
 @RestController
 @RequestMapping(value = "/api")
 public class UserEndpoint {
@@ -35,12 +39,14 @@ public class UserEndpoint {
 //    private DefaultTokenServices defaultTokenServices;
 
     @GetMapping(value = "/user/list-all")
+    @ApiIgnore
     public ResponseEntity<List<User>> queryAll() {
         List<User> users = userService.queryAll();
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/user-info")
+    @ApiOperation(value = "用户基本信息")
     public ResponseEntity<UserPrincipal> getUserInfo() {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder
                 .getContext()
